@@ -7,7 +7,7 @@ app = Flask(__name__)
 URL_CLIENTES = "https://sorveteriamicroservice.onrender.com/clientes/get"
 URL_SABORES = "https://menu-yqkj.onrender.com/menu"
 
-# Lista simulada de pedidosc
+# Lista simulada de pedidos
 pedidos = []
 
 @app.route('/pedido', methods=['POST'])
@@ -51,6 +51,28 @@ def criar_pedido():
 @app.route('/pedidos', methods=['GET'])
 def listar_pedidos():
     return jsonify({"pedidos": pedidos})
+
+@app.route('/menu', methods=['GET'])
+def listar_menu():
+    """
+    Obtém todos os sabores disponíveis no menu.
+    """
+    try:
+        sabores = requests.get(URL_SABORES).json()
+        return jsonify({"sabores": sabores}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/clientes', methods=['GET'])
+def listar_clientes():
+    """
+    Obtém todos os clientes do microsserviço.
+    """
+    try:
+        clientes = requests.get(URL_CLIENTES).json()
+        return jsonify({"clientes": clientes}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
